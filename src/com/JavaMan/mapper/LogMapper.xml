@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.JavaMan.mapper.LogMapper">
+	<!-- 缓存，factory的session共享 -->
+	<cache readOnly="true"></cache>
+	
+	<insert id="insLog" parameterType="Log">
+		insert into log values(default,#{accOut},#{accIn},#{time},#{money})
+	</insert>
+	
+	<!-- 分页功能 -->
+	<select id="selByPage"  resultType="Log">
+		select * from log limit #{pageStart},#{pageSize}
+	</select>
+	
+	<select id="selCount" resultType="long">
+		select count(*) from log
+	</select>
+	
+	<select id="selLogByIO" resultType="Log">
+		select * from log
+		<where>
+			<!-- OGNL表达式 -->
+			<if test="accin!=null and accin!=''">
+				and accin = #{accin}
+			</if>
+			<if test="accout!=null and accout!=''">
+				and accout = #{accout}
+			</if>
+			<if test="pageStart!=null and pageStart!='' and pageSize!=null and pageSize!=''">
+				limit #{pageStart},#{pageSize}
+			</if>
+		</where>
+		
+	</select>
+	
+	<select id="selCountByIO" resultType="long">
+		select count(*) from log
+		<where>
+			<if test="accin!=null and accin!=''">
+				and accin = #{accin}
+			</if>
+			<if test="accout!=null and accin!=''">
+				and accout = #{accout} 
+			</if>
+		</where>
+	</select>
+</mapper>
